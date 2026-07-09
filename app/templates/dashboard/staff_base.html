@@ -1,0 +1,19 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block sidebar_nav %}
+  <a href="{{ url_for('staff.staff_dashboard') }}" class="{{ 'active' if request.endpoint == 'staff.staff_dashboard' }}">
+    <span class="nav-icon"><i class="fa-solid fa-gauge"></i></span>
+     Dashboard
+  </a>
+
+  <a href="{{ url_for('staff.my_treks') }}" class="{{ 'active' if request.endpoint == 'staff.my_treks' }}">
+    <span class="nav-icon"><i class="fa-solid fa-mountain"></i></span>
+     My Treks
+  </a>
+
+  <a href="{{ url_for('staff.profile') }}" class="{{ 'active' if request.endpoint == 'staff.profile' }}">
+    <span class="nav-icon"><i class="fa-solid fa-id-badge"></i></span>
+     Profile
+  </a>
+
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "dashboard/staff_base.html" %}
+{% block title %}{{ trek.name }}{% endblock %}
+{% block page_title %}{{ trek.name }}{% endblock %}
+
+
+{% block content %}
+<a href="{{ url_for('staff.staff_dashboard') }}" class="small text-muted d-inline-block mb-3"><i class="fa-solid fa-arrow-left me-1"></i> Back to My Treks</a>
+
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="panel mb-3">
+      <div class="panel-title mb-3">Trek Information</div>
+      <div class="row g-3">
+        <div class="col-sm-6"><div class="small text-muted">Location</div><div class="fw-semibold">{{ trek.location }}</div></div>
+        <div class="col-sm-6"><div class="small text-muted">Difficulty</div><div class="fw-semibold">{{ trek.difficulty }}</div></div>
+        <div class="col-sm-6"><div class="small text-muted">Duration</div><div class="fw-semibold">{{ trek.duration }} Days</div></div>
+        <div class="col-sm-6"><div class="small text-muted">Total Slots</div><div class="fw-semibold">{{ trek.available_slots }}</div></div>
+        <div class="col-sm-6"><div class="small text-muted">Start Date</div><div class="fw-semibold">{{ trek.start_date.strftime('%d %b %Y') if trek.start_date else '—' }}</div></div>
+        <div class="col-sm-6"><div class="small text-muted">End Date</div><div class="fw-semibold">{{ trek.end_date.strftime('%d %b %Y') if trek.end_date else '—' }}</div></div>
+      </div>
+      {% if trek.description %}
+      <div class="mt-3">
+        <div class="small text-muted">Description</div>
+        <div>{{ trek.description }}</div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="panel">
+      <div class="panel-title mb-3">Participants ({{ participants|length }})</div>
+      <div class="table-responsive">
+        <table class="table">
+          <thead><tr><th>User</th><th>Email</th><th>Booking Date</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for b in participants %}
+            <tr>
+              <td class="fw-semibold">{{ b.user.full_name }}</td>
+              <td>{{ b.user.email }}</td>
+              <td>{{ b.booking_date.strftime('%d %b %Y') if b.booking_date }}</td>
+              <td><span class="badge-status badge-{{ b.status|lower }}">{{ b.status }}</span></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="text-center text-muted py-4">No participants have booked yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="panel mb-3">
+      <div class="panel-title mb-3">Update Trek</div>
+      <form method="POST" action="{{ url_for('staff.update_trek', trek_id=trek.id) }}">
+        <div class="mb-3">
+          <label class="form-label">Available Slots</label>
+          <input type="number" min="0" 
+                 name="available_slots" class="form-control" value="{{ trek.available_slots }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Trek Status</label>
+          <select name="status" class="form-select">
+            <option value="Open" {{ 'selected' if trek.status == 'Open' }} {{ 'disabled' if trek.status not in ['Open','Closed'] }}>Open</option>
+            <option value="Closed" {{ 'selected' if trek.status == 'Closed' }} {{ 'disabled' if trek.status not in ['Open','Closed'] }}>Closed</option>
+          </select>
+          {% if trek.status not in ['Open', 'Closed'] %}
+            <div class="form-text text-warning">This trek is currently "{{ trek.status }}" and must be approved by admin before staff can toggle Open/Closed.</div>
+          {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title mb-3">Trek Lifecycle</div>
+      <form method="POST" action="{{ url_for('staff.mark_started', trek_id=trek.id) }}" class="mb-2">
+        <button type="submit" class="btn btn-outline-primary w-100" {{ 'disabled' if trek.status != 'Open' }}>Mark as Started</button>
+      </form>
+      <form method="POST" action="{{ url_for('staff.mark_completed', trek_id=trek.id) }}">
+        <button type="submit" class="btn btn-outline-success w-100" {{ 'disabled' if trek.status == 'Completed' }}>Mark as Completed</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

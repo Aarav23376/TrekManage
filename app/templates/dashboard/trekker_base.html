@@ -1,0 +1,31 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block sidebar_nav %}
+
+  <a href="{{ url_for('trekker.trekker_dashboard') }}" class="{{ 'active' if request.endpoint == 'trekker.trekker_dashboard' }}">
+    <span class="nav-icon"><i class="fa-solid fa-gauge"></i></span>
+     Dashboard
+  </a>
+
+
+  <a href="{{ url_for('trekker.browse_treks') }}" class="{{ 'active' if request.endpoint == 'trekker.browse_treks' }}">
+    <span class="nav-icon"><i class="fa-solid fa-compass"></i></span>
+     Browse Treks
+  </a>
+
+  <a href="{{ url_for('trekker.my_bookings') }}" class="{{ 'active' if request.endpoint == 'trekker.my_bookings' }}">
+    <span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>
+     My Bookings
+  </a>
+
+  <a href="{{ url_for('trekker.history') }}" class="{{ 'active' if request.endpoint == 'trekker.history' }}">
+    <span class="nav-icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+     History
+  </a>
+   
+  <a href="{{ url_for('trekker.profile') }}" class="{{ 'active' if request.endpoint == 'trekker.profile' }}">
+    <span class="nav-icon"><i class="fa-solid fa-user"></i></span>
+     Profile
+  </a>
+
+  {% endblock %}

@@ -1,0 +1,81 @@
+{% extends "dashboard/admin_base.html" %}
+{% block title %}Search{% endblock %}
+{% block page_title %}Search{% endblock %}
+
+
+{% block content %}
+<div class="panel mb-3">
+  <form method="GET" class="d-flex gap-2">
+    <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search treks, staff, or users by name or ID...">
+    <button class="btn btn-primary px-4" type="submit"><i class="fa-solid fa-magnifying-glass me-1"></i> Search</button>
+  </form>
+</div>
+
+{% if q %}
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="panel h-100">
+      <div class="panel-title mb-3">Treks ({{ treks|length }})</div>
+      {% for t in treks %}
+        <div class="d-flex justify-content-between border-bottom py-2">
+          <div><div class="fw-semibold">{{ t.name }}</div><div class="small text-muted">{{ t.location }}</div></div>
+          <a href="{{ url_for('edit_trek', trek_id=t.id) }}" class="btn btn-sm btn-outline-secondary align-self-center">View</a>
+        </div>
+      {% else %}
+        <p class="text-muted small">No matching treks.</p>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel h-100">
+      <div class="panel-title mb-3">Staff ({{ staff|length }})</div>
+      {% for s in staff %}
+        <div class="d-flex justify-content-between border-bottom py-2">
+          <div><div class="fw-semibold">{{ s.full_name }}</div><div class="small text-muted">{{ s.email }}</div></div>
+          <span class="badge-status badge-{{
+                'blacklisted' if s.blacklisted
+                else 'approved' if s.approved
+                else 'pending'
+                }} align-self-center">
+                {{
+                    'Blacklisted' if s.blacklisted
+                    else 'Approved' if s.approved
+                    else 'Pending'
+                }}
+          </span>
+        </div>
+      {% else %}
+        <p class="text-muted small">No matching staff.</p>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel h-100">
+      <div class="panel-title mb-3">Users ({{ users|length }})</div>
+      {% for u in users %}
+        <div class="d-flex justify-content-between border-bottom py-2">
+          <div><div class="fw-semibold">{{ u.full_name }}</div><div class="small text-muted">{{ u.email }}</div></div>
+          <span class="badge-status badge-{{
+                'blacklisted' if u.blacklisted
+                else 'approved' if u.approved
+                else 'pending' }} align-self-center">
+                {{
+                    'Blacklisted' if u.blacklisted
+                    else 'Approved' if u.approved
+                    else 'Pending'
+                }}
+      </span>
+        </div>
+      {% else %}
+        <p class="text-muted small">No matching users.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+  <p>Search for a trek, staff member, or user by name or ID.</p>
+</div>
+{% endif %}
+{% endblock %}

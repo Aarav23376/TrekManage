@@ -1,0 +1,64 @@
+{% extends "dashboard/trekker_base.html" %}
+{% block title %}Browse Treks{% endblock %}
+{% block page_title %}Browse Treks{% endblock %}
+
+
+
+{% block content %}
+<div class="panel mb-4">
+  <form method="GET" class="row g-2">
+    <div class="col-md-5">
+      <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search treks by name or location...">
+    </div>
+    <div class="col-md-3">
+      <select name="difficulty" class="form-select">
+        <option value="">Difficulty: All</option>
+        {% for d in ['Easy', 'Moderate', 'Hard'] %}
+        <option value="{{ d }}" {{ 'selected' if difficulty == d }}>{{ d }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="location" class="form-select">
+        <option value="">Location: All</option>
+        {% for loc in all_locations %}
+        <option value="{{ loc }}" {{ 'selected' if location == loc }}>{{ loc }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-primary w-100"><i class="fa-solid fa-filter"></i></button>
+    </div>
+  </form>
+</div>
+
+<div class="row g-3">
+  {% for t in treks %}
+  <div class="col-md-6 col-lg-4">
+    <div class="trek-card">
+      <div class="trek-card-img"><i class="fa-solid fa-mountain-sun"></i></div>
+      <div class="trek-card-body">
+        <div class="d-flex justify-content-between align-items-start mb-1">
+          <div class="fw-bold">{{ t.name }}</div>
+          <span class="badge-status badge-{{ t.status|lower }}">{{ t.status }}</span>
+        </div>
+        <div class="small text-muted mb-2"><i class="fa-solid fa-location-dot me-1"></i>{{ t.location }}</div>
+        <div class="d-flex gap-3 small text-muted mb-3">
+          <span><i class="fa-solid fa-gauge-high me-1"></i>{{ t.difficulty }}</span>
+          <span><i class="fa-solid fa-calendar-days me-1"></i>{{ t.duration}}d</span>
+          <span><i class="fa-solid fa-user-group me-1"></i>{{ t.available_slots }} left</span>
+        </div>
+        <a href="{{ url_for('trekker.trek_detail', trek_id=t.id) }}" class="btn btn-primary btn-sm w-100">View Details</a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-12">
+    <div class="empty-state">
+      <div class="empty-icon"><i class="fa-solid fa-mountain"></i></div>
+      <p>No treks match your search or filters.</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

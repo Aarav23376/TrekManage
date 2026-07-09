@@ -1,0 +1,30 @@
+{% extends "dashboard/trekker_base.html" %}
+{% block title %}Trekking History{% endblock %}
+{% block page_title %}Trekking History{% endblock %}
+
+{% block content %}
+<div class="panel">
+  <div class="panel-title mb-3">Trekking History</div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead><tr><th>Trek Name</th><th>Trek Dates</th><th>Completed On</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr>
+          <td class="fw-semibold">{{ b.trek.name }}</td>
+          <td>
+            {% if b.trek.start_date and b.trek.end_date %}
+              {{ b.trek.start_date.strftime('%d %b') }} - {{ b.trek.end_date.strftime('%d %b %Y') }}
+            {% else %}—{% endif %}
+          </td>
+          <td>{{ b.trek.end_date.strftime('%d %b %Y') if b.trek.end_date else '—' }}</td>
+          <td><span class="badge-status badge-{{ b.status|lower }}">{{ b.status }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-center text-muted py-4">No completed treks yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

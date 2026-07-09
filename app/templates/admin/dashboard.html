@@ -1,0 +1,80 @@
+{% extends "dashboard/admin_base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+
+{% block content %}
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div>
+                <div class="stat-label">Total Treks</div>
+                <div class="stat-value">{{ total_treks }}</div>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-mountain"></i></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div>
+                <div class="stat-label">Total Users</div>
+                <div class="stat-value">{{ total_trekkers }}</div>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div>
+                <div class="stat-label">Total Staff</div>
+                <div class="stat-value">{{ total_staff }}</div>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-user-tie"></i></div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+            <div>
+                <div class="stat-label">Total Bookings</div>
+                <div class="stat-value">{{ total_bookings }}</div>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+        </div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="section-header">
+        <div class="panel-title">Recent Bookings</div>
+        <a href="{{ url_for('admin.manage_bookings') }}" class="small text-primary-tm fw-semibold">View All Bookings &rarr;</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>User</th>
+                    <th>Trek</th>
+                    <th>Booking Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in recent_bookings %}
+                <tr>
+                    <td>#{{ '%04d'|format(b.id) }}</td>
+                    <td>{{ b.user.full_name }}</td>
+                    <td>{{ b.trek.name }}</td>
+                    <td>{{ b.booking_date.strftime('%d %b %Y') if b.booking_date }}</td>
+                    <td><span class="badge-status badge-{{ b.status|lower }}">{{ b.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">No bookings yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

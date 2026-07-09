@@ -1,0 +1,85 @@
+{% extends "dashboard/admin_base.html" %}
+{% block title %}Manage Staff{% endblock %}
+{% block page_title %}Staff{% endblock %}
+
+
+
+{% block content %}
+<div class="panel">
+  <div class="panel-title mb-3">Staff Requests</div>
+
+  <ul class="nav nav-pills mb-3 gap-2">
+    <li class="nav-item">
+      <a class="nav-link {{ 'active' if tab == 'pending' }} " href="{{ url_for('admin.manage_staff', tab='pending') }}">
+        Pending ({{ counts.pending }})
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {{ 'active' if tab == 'approved' }}" href="{{ url_for('admin.manage_staff', tab='approved') }}">
+        Approved ({{ counts.approved }})
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {{ 'active' if tab == 'blacklisted' }}" href="{{ url_for('admin.manage_staff', tab='blacklisted') }}">
+        Blacklisted ({{ counts.blacklisted }})
+      </a>
+    </li>
+  </ul>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Staff ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Contact</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in staff_list %}
+        <tr>
+          <td>S{{ '%03d'|format(s.id) }}</td>
+          <td class="fw-semibold">{{ s.full_name }}</td>
+          <td>{{ s.email }}</td>
+          <td>{{ s.phone_number }}</td>
+          <td><span class="badge-status {% if tab=='pending' %}badge-pending{% elif tab=='approved' %} badge-approved {% else %} badge-blacklisted {% endif %}" >{% if tab=='pending' %}pending{% elif tab=='approved' %} approved {% else %} blacklisted {% endif %} </span></td>
+          <td class="d-flex gap-2">
+            {% if tab=='pending' %}
+              <div class="d-flex gap-2">
+                  <form method="POST" action="{{ url_for('admin.approve_staff', staff_id=s.id) }}">
+                      <button class="btn btn-success btn-sm">
+                          <i class="fa-solid fa-check"></i> Approve
+                      </button>
+                  </form>
+
+                  <form method="POST" action="{{ url_for('admin.reject_staff', staff_id=s.id) }}">
+                      <button class="btn btn-outline-danger btn-sm">
+                          <i class="fa-solid fa-xmark"></i> Reject
+                      </button>
+                  </form>
+              </div>
+            {% elif tab == 'approved' %}
+            <form method="POST" action="{{ url_for('admin.blacklist_staff', staff_id=s.id) }}">
+              <button class="btn btn-outline-danger btn-sm">Blacklist</button>
+            </form>
+              
+            {% elif tab == 'blacklisted' %}
+            <form method="POST" action="{{ url_for('admin.unblacklist_staff', staff_id=s.id) }}">
+              <button class="btn btn-outline-success btn-sm">Reinstate</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-4">No staff in this category.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

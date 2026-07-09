@@ -1,0 +1,79 @@
+{% extends "dashboard/trekker_base.html" %}
+{% block title %}My Dashboard{% endblock %}
+{% block page_title %}Welcome, {{ current_user.full_name.split(' ')[0] }}!{% endblock %}
+
+
+
+{% block content %}
+<div class="panel mb-4">
+  <div class="section-header">
+    <div class="panel-title">Available Treks</div>
+    <form method="GET" class="d-flex gap-2">
+      <select name="difficulty" class="form-select form-select-sm" onchange="this.form.submit()">
+        <option value="">Difficulty: All</option>
+        {% for d in ['Easy', 'Moderate', 'Hard'] %}
+        <option value="{{ d }}" {{ 'selected' if difficulty == d }}>{{ d }}</option>
+        {% endfor %}
+      </select>
+      <select name="location" class="form-select form-select-sm" onchange="this.form.submit()">
+        <option value="">Location: All</option>
+        {% for loc in all_locations %}
+        <option value="{{ loc }}" {{ 'selected' if location == loc }}>{{ loc }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr><th>Trek Name</th><th>Location</th><th>Difficulty</th><th>Duration</th><th>Available Slots</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for t in treks %}
+        <tr>
+          <td class="fw-semibold">{{ t.name }}</td>
+          <td>{{ t.location }}</td>
+          <td>{{ t.difficulty }}</td>
+          <td>{{ t.duration }} Days</td>
+          <td>{{ t.available_slots }}</td>
+          <td>
+            {% if t.status == 'Open' and t.available_slots > 0 %}
+              <a href="{{ url_for('trekker.trek_detail', trek_id=t.id) }}" class="btn btn-sm btn-primary">Book Now</a>
+            {% else %}
+              <a href="{{ url_for('trekker.trek_detail', trek_id=t.id) }}" class="btn btn-sm btn-outline-secondary">View</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No treks match your filters.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="section-header">
+    <div class="panel-title">My Bookings</div>
+    <a href="{{ url_for('trekker.my_bookings') }}" class="small text-primary-tm fw-semibold">View All &rarr;</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead><tr><th>Trek Name</th><th>Booking Date</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for b in my_bookings %}
+        <tr>
+          <td class="fw-semibold">{{ b.trek.name }}</td>
+          <td>{{ b.booking_date.strftime('%d %b %Y') if b.booking_date }}</td>
+          <td><span class="badge-status badge-{{ b.status|lower }}">{{ b.status }}</span></td>
+          <td><a href="{{ url_for('trekker.trek_detail', trek_id=b.trek.id) }}" class="btn btn-sm btn-outline-secondary">View Details</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-center text-muted py-4">You haven't booked any treks yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

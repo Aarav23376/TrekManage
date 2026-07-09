@@ -1,0 +1,183 @@
+{% extends "dashboard/admin_base.html" %}
+
+{% block title %}Reports{% endblock %}
+{% block page_title %}Reports{% endblock %}
+
+{% block content %}
+
+<div class="row g-4">
+
+ 
+    <div class="col-md-6">
+        <div class="panel h-100">
+            <div class="panel-title mb-3">
+                Trek Report
+            </div>
+
+            <table class="table">
+                <tr>
+                    <th>Total Treks</th>
+                    <td>{{ total_treks }}</td>
+                </tr>
+
+                <tr>
+                    <th>Active Treks</th>
+                    <td>{{ active_treks }}</td>
+                </tr>
+
+                <tr>
+                    <th>Completed Treks</th>
+                    <td>{{ completed_treks }}</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel h-100">
+            <div class="panel-title mb-3">
+                Staff Report
+            </div>
+
+            <table class="table">
+
+                <tr>
+                    <th>Total Staff</th>
+                    <td>{{ total_staff }}</td>
+                </tr>
+
+                <tr>
+                    <th>Approved</th>
+                    <td>{{ approved_staff }}</td>
+                </tr>
+
+                <tr>
+                    <th>Pending</th>
+                    <td>{{ pending_staff }}</td>
+                </tr>
+
+                <tr>
+                    <th>Blacklisted</th>
+                    <td>{{ blacklisted_staff }}</td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+    <!-- Trekker Report -->
+    <div class="col-md-6">
+
+        <div class="panel h-100">
+
+            <div class="panel-title mb-3">
+                Trekker Report
+            </div>
+
+            <table class="table">
+
+                <tr>
+                    <th>Total Trekkers</th>
+                    <td>{{ total_users }}</td>
+                </tr>
+
+                <tr>
+                    <th>Blacklisted</th>
+                    <td>{{ blacklisted_users }}</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+  
+
+    <div class="col-md-6">
+
+        <div class="panel h-100">
+
+            <div class="panel-title mb-3">
+                Booking Report
+            </div>
+
+            <table class="table">
+
+                <tr>
+                    <th>Total Bookings</th>
+                    <td>{{ total_bookings }}</td>
+                </tr>
+
+                <tr>
+                    <th>Booked</th>
+                    <td>{{ booked }}</td>
+                </tr>
+
+                <tr>
+                    <th>Cancelled</th>
+                    <td>{{ cancelled }}</td>
+                </tr>
+
+                <tr>
+                    <th>Completed</th>
+                    <td>{{ completed }}</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="panel mt-4">
+
+    <div class="panel-title mb-3">
+        Recent Bookings
+    </div>
+
+    <table class="table">
+
+        <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Trek</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for booking in recent_bookings %}
+
+            <tr>
+
+                <td>#{{ "%04d"|format(booking.id) }}</td>
+
+                <td>{{ booking.user.full_name }}</td>
+
+                <td>{{ booking.trek.name }}</td>
+
+                <td>{{ booking.booking_date }}</td>
+
+                <td>{{ booking.status }}</td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

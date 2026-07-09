@@ -1,0 +1,76 @@
+{% extends "dashboard/staff_base.html" %}
+{% block title %}Staff Dashboard{% endblock %}
+{% block page_title %}My Dashboard{% endblock %}
+
+
+
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-sm-4">
+    <div class="stat-card">
+      <div>
+        <div class="stat-label">Assigned Treks</div>
+        <div class="stat-value">{{ my_treks|length }}</div>
+      </div>
+      <div class="stat-icon"><i class="fa-solid fa-mountain"></i></div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="stat-card">
+      <div>
+        <div class="stat-label">Total Participants</div>
+        <div class="stat-value">{{ total_participants }}</div>
+      </div>
+      <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="stat-card">
+      <div>
+        <div class="stat-label">Open Treks</div>
+        <div class="stat-value">{{ open_treks }}</div>
+      </div>
+      <div class="stat-icon"><i class="fa-solid fa-door-open"></i></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-title mb-3">My Assigned Treks</div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Trek Name</th>
+          <th>Location</th>
+          <th>Participants</th>
+          <th>Slots</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in my_treks[:5] %}
+        <tr>
+          <td class="fw-semibold">{{ t.name }}</td>
+          <td>{{ t.location }}</td>
+          <td>{{ t.active_booking_count }}</td>
+          <td>{{ t.available_slots }} slots left </td>
+          <td><span class="badge-status badge-{{ t.status|lower }}">{{ t.status }}</span></td>
+          <td><a href="{{ url_for('staff.trek_detail', trek_id=t.id) }}" class="btn btn-sm btn-primary">Manage</a></td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-4">No treks assigned to you yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="text-end mt-3">
+      <a href="{{ url_for('staff.my_treks') }}" class="small text-primary fw-semibold">
+        View All →
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

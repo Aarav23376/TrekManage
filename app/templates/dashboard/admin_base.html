@@ -1,0 +1,42 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block sidebar_nav %}
+
+<a href="{{ url_for('admin.admin_dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.admin_dashboard' }}">
+    <span class="nav-icon"><i class="fa-solid fa-gauge"></i></span>
+    Dashboard
+</a>
+
+<a href="{{ url_for('admin.manage_treks') }}" class="{{ 'active' if request.endpoint in ['admin.manage_treks', 'admin.add_trek']}}">
+    <span class="nav-icon"><i class="fa-solid fa-mountain"></i></span>
+    Treks
+</a>
+
+<a href="{{ url_for('admin.manage_staff') }}" class="{{ 'active' if request.endpoint in ['admin.manage_staff', 'admin.pending_staff'] }}">
+    <span class="nav-icon"><i class="fa-solid fa-user-tie"></i></span>
+    Staff
+</a>
+
+<a href="{{ url_for('admin.manage_users') }}" class=" {{ 'active' if request.endpoint in ['admin.manage_users']  }}">
+    <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+     Users
+</a>
+
+
+
+<a href="{{ url_for('admin.manage_bookings') }}" class="{{ 'active' if request.endpoint in ['admin.manage_bookings']}}">
+    <span class="nav-icon"><i class="fa-solid fa-calendar-check"></i></span>
+    Bookings
+</a>
+
+<a href="{{ url_for('admin.reports') }}" class="{{ 'active' if request.endpoint in ['admin.reports']}}">
+    <span class="nav-icon"><i class="fa-solid fa-chart-column"></i></span>
+    Reports
+</a>
+
+<a href="{{ url_for('admin.search') }}" class="{{ 'active' if request.endpoint in ['admin.search']}}">
+    <span class="nav-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+     Search
+</a>
+
+{% endblock %}

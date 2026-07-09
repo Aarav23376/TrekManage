@@ -1,0 +1,71 @@
+{% extends "dashboard/admin_base.html" %}
+{% block title %}Manage Users{% endblock %}
+{% block page_title %}Users{% endblock %}
+
+
+
+{% block content %}
+<div class="panel">
+  <div class="section-header">
+    <div class="panel-title">Users (Trekkers)</div>
+    <form class="d-flex" method="GET">
+      <input type="text" name="q" value="{{ q }}" class="form-control form-control-sm" placeholder="Search users..."
+        style="width:220px;">
+    </form>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Contact</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in user %}
+        <tr>
+          <td>U{{ '%03d'|format(u.id) }}</td>
+          <td class="fw-semibold">{{ u.full_name }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.phone_number or '—' }}</td>
+          <td>
+            {% if u.blacklisted %}
+            <span class="badge bg-danger">Blacklisted</span>
+            {% elif u.approved %}
+            <span class="badge bg-success">Approved</span>
+            {% else %}
+            <span class="badge bg-warning">Pending</span>
+            {% endif %}
+          </td>
+          <td>
+            <form method="POST" action="{{ url_for('admin.toggle_blacklist_user', user_id=u.id) }}" class="d-inline">
+
+              {% if u.blacklisted %}
+              <button type="submit" class="btn btn-sm btn-outline-success">
+                Reinstate
+              </button>
+              {% else %}
+              <button type="submit" class="btn btn-sm btn-outline-danger">
+                Blacklist
+              </button>
+              {% endif %}
+
+            </form>
+            
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-4">No users found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
